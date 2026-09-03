@@ -10,6 +10,8 @@
 - classify             技术方向分类（10 类）
 - filter_student_projects 学生友好项目筛选
 - exporter             Excel 多 Sheet 导出
+- gui_query            查询引擎（搜索/筛选/排序纯函数）
+- webapp               交互式 Web 读取软件（搜索/筛选/重新爬取/导出）
 - cli                  命令行入口
 """
 __version__ = "1.0.0"

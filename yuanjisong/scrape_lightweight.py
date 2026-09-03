@@ -5,11 +5,13 @@
      -> 指数退避重试 -> 周期性落盘(output/state.json + projects.json) -> 断点续爬。
 
 用法：
-  python scrape_lightweight.py                    # 全量增量抓取
-  python scrape_lightweight.py --pages 50         # 只抓 50 页
-  python scrape_lightweight.py --fresh            # 清空状态重新抓
-  python scrape_lightweight.py --use-proxy        # 启用代理池轮转
-  python scrape_lightweight.py --concurrency 8    # 调整并发
+  python main.py scrape                    # 全量增量抓取
+  python main.py scrape --pages 50         # 只抓 50 页
+  python main.py scrape --fresh            # 清空状态重新抓
+  python main.py scrape --use-proxy        # 启用代理池轮转
+  python main.py scrape --concurrency 8    # 调整并发
+
+也可作为库使用：Scraper(progress=callback)，callback 接收进度文本消息（GUI 用）。
 """
 from __future__ import annotations
 
@@ -19,12 +21,15 @@ import json
 import random
 import sys
 import time
+from typing import Callable
 
 from curl_cffi import requests as cffi_requests
 
 from yuanjisong import config
 from yuanjisong.models import Project, load_json, parse_job_cards, save_json
 from yuanjisong.proxy_pool import ProxyPool
+
+ProgressFn = Callable[[str], None]
 
 
 class State:
@@ -58,13 +63,23 @@ class State:
 
 
 class Scraper:
-    def __init__(self, concurrency: int = config.CONCURRENCY, use_proxy: bool = False):
+    def __init__(self, concurrency: int = config.CONCURRENCY, use_proxy: bool = False,
+                 progress: ProgressFn | None = None):
         self.concurrency = max(1, concurrency)
         self.session: cffi_requests.AsyncSession | None = None
         self.pool = ProxyPool() if use_proxy else None
         self.projects: dict[str, Project] = {}
         self.state = State()
         self.stats = {"pages_ok": 0, "pages_fail": 0, "items": 0, "retries": 0}
+        self._progress: ProgressFn = progress or (lambda msg: print(msg))
+
+    def _log(self, msg: str, error: bool = False) -> None:
+        if error:
+            print(msg, file=sys.stderr)
+        try:
+            self._progress(msg)
+        except Exception:
+            pass  # 回调失败不影响抓取
 
     # ---------- 会话 ----------
     async def _sess(self) -> cffi_requests.AsyncSession:
@@ -134,9 +149,9 @@ class Scraper:
 
         if self.pool:
             alive = await self.pool.refresh()
-            print(f"[proxy] 可用代理 {alive} 个 {self.pool.stats()}")
+            self._log(f"[proxy] 可用代理 {alive} 个 {self.pool.stats()}")
             if alive == 0:
-                print("[proxy] 代理池为空，自动降级为直连")
+                self._log("[proxy] 代理池为空，自动降级为直连")
 
         await self.warmup()
         sem = asyncio.Semaphore(self.concurrency)
@@ -163,11 +178,11 @@ class Scraper:
                     self.stats["pages_ok"] += 1
                     self.stats["items"] += added
                     await self._checkpoint(page)
-                    print(f"[page {page:>4}] {len(cards)} 条 / 新增 {added}，"
-                          f"累计 {len(self.projects)}（{time.time()-t0:.0f}s）")
+                    self._log(f"[page {page:>4}] {len(cards)} 条 / 新增 {added}，"
+                              f"累计 {len(self.projects)}（{time.time()-t0:.0f}s）")
                 except Exception as e:
                     self.stats["pages_fail"] += 1
-                    print(f"[page {page:>4}] 失败：{e}", file=sys.stderr)
+                    self._log(f"[page {page:>4}] 失败：{e}", error=True)
                     if self.stats["pages_fail"] >= 10:   # 连续性熔断
                         stop.set()
 
@@ -186,8 +201,8 @@ class Scraper:
             page = end
 
         await self._checkpoint(max(self.state.done_pages, default=start_page), force=True)
-        print(f"[done] 成功页 {self.stats['pages_ok']} / 失败页 {self.stats['pages_fail']}"
-              f" / 项目 {len(self.projects)} 条，用时 {time.time()-t0:.1f}s")
+        self._log(f"[done] 成功页 {self.stats['pages_ok']} / 失败页 {self.stats['pages_fail']}"
+                  f" / 项目 {len(self.projects)} 条，用时 {time.time()-t0:.1f}s")
         return list(self.projects.values())
 
     async def close(self) -> None:

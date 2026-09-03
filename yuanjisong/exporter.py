@@ -8,8 +8,8 @@ from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
-from yuanjisong.models import Project
 from yuanjisong import config
+from yuanjisong.models import Project
 
 COLUMNS = [
     ("ID", lambda p: p.id),
@@ -39,7 +39,7 @@ def _write_sheet(ws, projects: list[Project], link_col: str | None = "链接") -
     for p in projects:
         ws.append([fn(p) for _, fn in COLUMNS])
     # 自适应列宽（描述限宽）
-    widths = {}
+    widths: dict[int, float] = {}
     for row in ws.iter_rows(values_only=True):
         for i, v in enumerate(row):
             w = min(max(widths.get(i, 8), len(str(v)) * 1.8 if v else 8), 60)
@@ -55,6 +55,17 @@ def _write_sheet(ws, projects: list[Project], link_col: str | None = "链接") -
             if cell.value:
                 cell.hyperlink = cell.value
                 cell.font = Font(color="0563C1", underline="single")
+
+
+def export_excel(projects: list[Project], path, sheet_name: str = "项目列表") -> Path:
+    """通用导出：任意项目集合导出为单 Sheet Excel（GUI“导出当前视图”用）。"""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    wb = Workbook()
+    _write_sheet(wb.active, projects)
+    wb.active.title = sheet_name[:31]
+    wb.save(path)
+    return path
 
 
 def export_all_excel(projects: list[Project], path=None) -> Path:

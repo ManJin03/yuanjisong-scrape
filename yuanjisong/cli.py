@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""命令行入口：scrape / classify / student / all 四个子命令。"""
+"""命令行入口：scrape / classify / student / gui / all 子命令。"""
 from __future__ import annotations
 
 import argparse
@@ -46,6 +46,12 @@ def cmd_scrape(args) -> None:
     asyncio.run(_run())
 
 
+def cmd_gui(_args) -> None:
+    from yuanjisong.webapp import run
+
+    run()
+
+
 def cmd_classify(args) -> None:
     from yuanjisong.classify import category_summary, classify_all
     from yuanjisong.exporter import export_all_excel
@@ -89,12 +95,13 @@ def main() -> None:
         p.add_argument("--fresh", action="store_true")
 
     add_scrape_options(sub.add_parser("scrape", help="抓取兼职项目"))
+    sub.add_parser("gui", help="启动交互式读取/筛选软件（浏览器 UI）")
     sub.add_parser("classify", help="技术分类并导出多 Sheet Excel")
     sub.add_parser("student", help="生成学生友好项目清单")
     add_scrape_options(sub.add_parser("all", help="抓取+分类+学生筛选全流程"))
 
     args = ap.parse_args()
-    {"scrape": cmd_scrape, "classify": cmd_classify,
+    {"scrape": cmd_scrape, "gui": cmd_gui, "classify": cmd_classify,
      "student": cmd_student, "all": cmd_all}[args.cmd](args)
 
 
