@@ -176,7 +176,7 @@ PAGE = r"""<!DOCTYPE html>
 <title>猿急送兼职项目智能筛选系统</title>
 <style>
 :root{
-  --bg:#f5f7fa; --panel:#ffffff; --side:#1e293b; --side2:#273548;
+  --bg:#dfe6ef; --panel:#ffffff; --side:#1e293b; --side2:#273548;
   --line:#e2e8f0; --txt:#1e293b; --dim:#64748b;
   --acc:#2563eb; --green:#059669; --red:#dc2626; --amber:#d97706;
   --green-bg:#ecfdf5; --red-bg:#fef2f2; --amber-bg:#fffbeb; --blue-bg:#eff6ff;
@@ -201,7 +201,6 @@ section h4::before{content:"";position:absolute;left:0;top:2px;bottom:2px;width:
 .field:last-child{margin-bottom:0}
 .field>span{display:block;font-size:12px;color:#8ba0b8;margin-bottom:4px}
 .row2{display:flex;gap:8px;align-items:center}
-.row2>span{flex:none}
 aside button{width:100%;text-align:left;background:var(--side2);color:#dbe6f2;border:1px solid #3b4d64;
              border-radius:7px;padding:8px 12px;cursor:pointer;font-size:13px;
              margin-bottom:8px;transition:.15s;display:flex;align-items:center;gap:7px}
@@ -227,42 +226,53 @@ aside .check input{width:15px;height:15px;accent-color:var(--acc);cursor:pointer
 main{flex:1;height:100vh;display:flex;flex-direction:column;min-width:0}
 .topbar{background:var(--panel);border-bottom:1px solid var(--line);padding:12px 22px;
         display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.chip{background:var(--bg);border:1px solid var(--line);border-radius:16px;
+.chip{background:#f1f5f9;border:1px solid var(--line);border-radius:16px;
       padding:4px 14px;font-size:12.5px;color:var(--dim)}
 .chip b{color:var(--txt);font-size:14px;margin:0 2px}
 .chip.hl{background:var(--green-bg);border-color:#a7f3d0;color:#047857}
 .chip.hl b{color:#065f46}
 .topbar .title{font-size:13px;color:var(--dim);margin-right:auto}
 
-.table-wrap{flex:1;overflow:auto;background:var(--panel)}
-table{width:100%;border-collapse:collapse;font-size:13.5px}
-thead th{position:sticky;top:0;z-index:2;background:#f1f5f9;color:#475569;font-weight:600;
-         padding:10px 14px;text-align:left;cursor:pointer;user-select:none;white-space:nowrap;
-         border-bottom:2px solid var(--line);font-size:12.5px}
-thead th:hover{color:var(--acc)}
-thead th.sorted{color:var(--acc)}
-thead th.sorted::after{content:" ▲";font-size:10px}
-thead th.sorted.desc::after{content:" ▼"}
-tbody td{padding:10px 14px;border-bottom:1px solid #f1f5f9;vertical-align:top}
-tbody tr:nth-child(even){background:#fafcfe}
-tbody tr:hover{background:var(--blue-bg);cursor:pointer}
-tbody tr.selected{background:#dbeafe;outline:1px solid #93c5fd}
-tbody tr.student{background:var(--green-bg)}
-tbody tr.student:nth-child(even){background:#e6fbf3}
-tbody tr.student:hover{background:#d1fae5}
-td.id,td.delivery{text-align:center;color:var(--dim);font-variant-numeric:tabular-nums}
-td.money{text-align:right;font-weight:700;color:var(--green);white-space:nowrap;
-         font-variant-numeric:tabular-nums}
-td.title-cell{font-weight:600;max-width:300px}
+/* ============ 卡片区（背景 + 悬浮卡片） ============ */
+.card-area{flex:1;overflow-y:auto;overflow-x:hidden;padding:20px 22px;
+           background:linear-gradient(160deg,#e6ecf4 0%,#d8e1ec 55%,#cfd9e6 100%)}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(324px,1fr));
+           gap:14px;align-content:start}
+.card{background:var(--panel);border:1px solid #e3e9f1;border-radius:12px;
+      padding:14px 16px 12px;cursor:pointer;position:relative;
+      box-shadow:0 1px 3px rgba(15,23,42,.07),0 1px 2px rgba(15,23,42,.04);
+      transition:transform .14s,box-shadow .14s,border-color .14s;
+      display:flex;flex-direction:column;gap:8px;min-height:150px}
+.card:hover{transform:translateY(-3px);border-color:#93c5fd;
+            box-shadow:0 10px 24px rgba(15,23,42,.14),0 3px 8px rgba(15,23,42,.08)}
+.card.selected{outline:2.5px solid var(--acc);outline-offset:-2px;
+               box-shadow:0 8px 22px rgba(37,99,235,.18)}
+.card.student{background:#f4fdf8;border-color:#a7e8c4}
+.card.student:hover{border-color:#34d399;box-shadow:0 10px 24px rgba(5,150,105,.15)}
+.card.blacklisted{background:#fff7f7;border-color:#f3c1c1}
+.card.blacklisted:hover{border-color:#f87171;box-shadow:0 10px 24px rgba(220,38,38,.12)}
+.card-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.card-title{font-weight:600;font-size:14px;line-height:1.45;flex:1;word-break:break-all}
+.card-money{color:var(--green);font-weight:700;font-size:18px;white-space:nowrap;
+            font-variant-numeric:tabular-nums}
+.card-tags{display:flex;flex-wrap:wrap;gap:6px}
 .tag{display:inline-block;padding:2px 9px;border-radius:11px;font-size:11.5px;
      white-space:nowrap;font-weight:500}
 .tag.remote{background:#dbeafe;color:#1d4ed8}
 .tag.onsite{background:var(--amber-bg);color:#b45309}
 .tag.black{background:var(--red-bg);color:var(--red)}
 .tag.cat{background:var(--green-bg);color:#047857}
+.tag.meta{background:#f1f5f9;color:#64748b}
+.card-desc{color:#64748b;font-size:12.5px;line-height:1.65;
+           display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
+           overflow:hidden;word-break:break-all}
+.card-foot{display:flex;justify-content:space-between;align-items:center;
+           color:#94a3b8;font-size:12px;border-top:1px dashed #e8edf3;
+           padding-top:8px;margin-top:auto}
+.card-foot .employer{max-width:70%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dim{color:var(--dim)}
-td.desc-cell{color:#64748b;font-size:12.8px;max-width:520px}
-.empty{padding:80px 20px;text-align:center;color:var(--dim);font-size:14px}
+.empty{grid-column:1/-1;padding:80px 20px;text-align:center;color:var(--dim);
+       font-size:14px;background:#ffffff90;border-radius:12px}
 
 /* ================= 底部：详情/日志 ================= */
 .bottom{height:250px;min-height:250px;border-top:1px solid var(--line);background:var(--panel);
@@ -358,25 +368,8 @@ td.desc-cell{color:#64748b;font-size:12.8px;max-width:520px}
     <span class="chip">学生友好 <b id="studentCount">0</b></span>
   </div>
 
-  <div class="table-wrap">
-    <table>
-      <thead><tr>
-        <th data-k="id" style="width:76px">ID</th>
-        <th data-k="title" style="min-width:220px">标题</th>
-        <th data-k="budget" style="width:92px">预算</th>
-        <th data-k="hours" style="width:86px">工时</th>
-        <th style="width:150px">合作类型</th>
-        <th data-k="delivery_count" style="width:64px">投递</th>
-        <th data-k="category" style="width:104px">技术分类</th>
-        <th style="width:88px">状态</th>
-        <th style="width:110px">雇主</th>
-        <th style="min-width:360px">描述摘要</th>
-      </tr></thead>
-      <tbody id="tbody"></tbody>
-    </table>
-    <div class="empty" id="empty" style="display:none">
-      暂无数据 —— 可在左侧点击「重新爬取」，或调整筛选条件
-    </div>
+  <div class="card-area">
+    <div class="card-grid" id="cardGrid"></div>
   </div>
 
   <div class="bottom">
@@ -385,7 +378,7 @@ td.desc-cell{color:#64748b;font-size:12.8px;max-width:520px}
       <button id="tab-log" onclick="showTab('log')">爬取日志</button>
     </div>
     <div id="detail" class="pane active">
-      <p class="hint">点击表格中任意一行查看完整信息；双击直接打开职位链接。</p>
+      <p class="hint">点击卡片查看完整信息；双击直接打开职位链接。</p>
     </div>
     <div id="logPane" class="pane"><div id="logBox">等待操作…</div></div>
   </div>
@@ -458,7 +451,6 @@ function onFilter(){
   else if(sort==="投递人数升序") VIEW.sort((a,b)=>a.delivery_count-b.delivery_count||a.budget-b.budget);
   else if(sort==="工时升序") VIEW.sort((a,b)=>(parseFloat(a.hours)-parseFloat(b.hours)));
   else if(sort==="最新优先") VIEW.sort((a,b)=>+b.id-+a.id);
-  markSortedHeader(sort);
 
   render();
   const remoteN = VIEW.filter(p=>p.is_remote).length;
@@ -472,49 +464,50 @@ function onFilter(){
     `远程 ${remoteN} · 学生友好 ${studentN}`;
 }
 
-function markSortedHeader(sort){
-  const map = {"预算升序":"budget","预算降序":"budget","投递人数升序":"delivery_count",
-               "工时升序":"hours","最新优先":"id"};
-  document.querySelectorAll("thead th").forEach(th=>{
-    th.classList.remove("sorted","desc");
-    if(th.dataset.k && map[sort]===th.dataset.k){
-      th.classList.add("sorted");
-      if(sort.includes("降序")) th.classList.add("desc");
-    }
-  });
-}
-
 function render(){
-  const tb = $("tbody");
+  const grid = $("cardGrid");
   const student = $("student").checked;
   const frag = [];
-  for(const p of VIEW.slice(0,3000)){
-    const cls = [student?"student":"", p.id===selectedId?"selected":""].join(" ");
-    const status = p.blacklist_hit
+  const shown = VIEW.slice(0, 600);
+  for(const p of shown){
+    const cls = [p.blacklist_hit ? "blacklisted" : (student ? "student" : ""),
+                 p.id===selectedId ? "selected" : ""].join(" ").trim();
+    const statusTag = p.blacklist_hit
       ? `<span class="tag black" title="命中：${esc(p.blacklist_word)}">${esc(p.blacklist_hit)}</span>`
       : (p.is_onsite ? `<span class="tag onsite">驻场</span>` : `<span class="tag remote">远程</span>`);
-    frag.push(`<tr class="${cls}" data-id="${p.id}" onclick="showDetail('${p.id}')" ondblclick="openLink('${p.id}')">
-      <td class="id">${p.id}</td>
-      <td class="title-cell">${esc(p.title)}</td>
-      <td class="money">¥${p.budget}</td>
-      <td>${esc(p.hours)}</td>
-      <td class="dim">${esc(p.work_type)}</td>
-      <td class="delivery">${p.delivery_count}</td>
-      <td>${p.category&&p.category!=="其他" ? `<span class="tag cat">${esc(p.category)}</span>` : `<span class="dim">其他</span>`}</td>
-      <td>${status}</td>
-      <td class="dim">${esc(p.employer)}</td>
-      <td class="desc-cell">${esc(p.desc)}</td></tr>`);
+    const catTag = p.category && p.category!=="其他"
+      ? `<span class="tag cat">${esc(p.category)}</span>` : "";
+    frag.push(`<div class="card ${cls}" data-id="${p.id}"
+        onclick="showDetail('${p.id}')" ondblclick="openLink('${p.id}')">
+      <div class="card-head">
+        <div class="card-title">${esc(p.title)}</div>
+        <div class="card-money">¥${p.budget}</div>
+      </div>
+      <div class="card-tags">${catTag}${statusTag}
+        <span class="tag meta">⏱ ${esc(p.hours)}</span>
+        <span class="tag meta">👤 ${p.delivery_count} 人投递</span>
+      </div>
+      <div class="card-desc">${esc(p.desc)}</div>
+      <div class="card-foot">
+        <span class="employer">${esc(p.employer)}</span>
+        <span>#${p.id}</span>
+      </div>
+    </div>`);
   }
-  tb.innerHTML = frag.join("");
-  $("empty").style.display = VIEW.length ? "none":"block";
+  if(!VIEW.length){
+    frag.push(`<div class="empty">暂无数据 —— 可在左侧点击「重新爬取」，或调整筛选条件</div>`);
+  }else if(VIEW.length > shown.length){
+    frag.push(`<div class="empty">仅渲染前 ${shown.length} 条（共 ${VIEW.length} 条），可缩小范围或导出查看全部</div>`);
+  }
+  grid.innerHTML = frag.join("");
 }
 
 async function showDetail(id){
   selectedId = id;
   showTab("detail");
-  document.querySelectorAll("tr.selected").forEach(e=>e.classList.remove("selected"));
-  const row = document.querySelector(`tr[data-id="${id}"]`);
-  if(row) row.classList.add("selected");
+  document.querySelectorAll(".card.selected").forEach(e=>e.classList.remove("selected"));
+  const card = document.querySelector(`.card[data-id="${id}"]`);
+  if(card) card.classList.add("selected");
   const p = await api("/api/project/"+id);
   $("detail").innerHTML = `
     <h3>${esc(p.title)}<span class="money">¥${p.budget}</span></h3>
@@ -536,16 +529,6 @@ async function showDetail(id){
 
 function openLink(id){ window.open("/api/redirect/"+id); }
 function copyText(t){ navigator.clipboard.writeText(t); }
-
-document.querySelectorAll("thead th[data-k]").forEach(th=>{
-  th.onclick = ()=>{
-    const map = {budget:["预算升序","预算降序"],delivery_count:["投递人数升序","最新优先"],
-                 hours:["工时升序","预算升序"],id:["最新优先","预算升序"],title:["预算升序","预算降序"],
-                 category:["最新优先","预算升序"],employer:["最新优先","预算升序"]};
-    const k = th.dataset.k;
-    if(map[k]){ const cur=$("sort").value; $("sort").value = cur===map[k][0]?map[k][1]:map[k][0]; onFilter(); }
-  };
-});
 
 function resetFilters(){
   ["kw","bmin","bmax"].forEach(i=>$(i).value="");
@@ -646,7 +629,8 @@ def make_handler(store: DataStore, scraper: ScrapeManager):
 
         # ---------- GET ----------
         def do_GET(self):
-            if self.path == "/":
+            path = self.path.split("?", 1)[0]
+            if path == "/":
                 html = PAGE.encode("utf-8")
                 self.send_response(200)
                 self.send_header("Content-Type", "text/html; charset=utf-8")
@@ -659,13 +643,13 @@ def make_handler(store: DataStore, scraper: ScrapeManager):
                 self._json({"projects": projects,
                             "categories": available_categories(store.projects),
                             "summary": summary})
-            elif self.path.startswith("/api/project/"):
+            elif path.startswith("/api/project/"):
                 pid = self.path.rsplit("/", 1)[-1]
                 d = store.detail(pid)
                 self._json(d if d else {"error": "not found"}, 200 if d else 404)
-            elif self.path == "/api/scrape/status":
+            elif path == "/api/scrape/status":
                 self._json(scraper.status())
-            elif self.path.startswith("/api/redirect/"):
+            elif path.startswith("/api/redirect/"):
                 pid = self.path.rsplit("/", 1)[-1]
                 d = store.detail(pid)
                 if d and d["url"]:
@@ -679,8 +663,9 @@ def make_handler(store: DataStore, scraper: ScrapeManager):
 
         # ---------- POST ----------
         def do_POST(self):
+            path = self.path.split("?", 1)[0]
             try:
-                if self.path == "/api/scrape":
+                if path == "/api/scrape":
                     body = self._body()
                     pages = body.get("pages")
                     concurrency = max(1, int(body.get("concurrency", config.CONCURRENCY)))
@@ -688,7 +673,7 @@ def make_handler(store: DataStore, scraper: ScrapeManager):
                     ok, err = scraper.start(pages if pages and pages > 0 else None,
                                             concurrency, fresh)
                     self._json({"started": ok, "error": err})
-                elif self.path == "/api/classify":
+                elif path == "/api/classify":
                     if not store.projects:
                         self._json({"summary": {}, "count": 0})
                         return
@@ -696,7 +681,7 @@ def make_handler(store: DataStore, scraper: ScrapeManager):
                     store.save()
                     self._json({"summary": category_summary(store.projects),
                                 "count": len(store.projects)})
-                elif self.path in ("/api/export/full", "/api/export/view"):
+                elif path in ("/api/export/full", "/api/export/view"):
                     try:
                         from yuanjisong.exporter import (
                             export_all_excel, export_excel, export_student_excel,
