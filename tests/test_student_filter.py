@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from filter_student_projects import filter_student_projects, is_student_friendly
-from models import Project
+from yuanjisong.filter_student_projects import filter_student_projects, is_student_friendly
+from yuanjisong.models import Project
 
 
 def mk(**kw):

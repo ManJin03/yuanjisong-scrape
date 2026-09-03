@@ -9,9 +9,9 @@
 """
 from __future__ import annotations
 
-from models import Project
-import config
-from smart_filter import apply_blacklist, filter_valid_budget
+from yuanjisong.models import Project
+from yuanjisong import config
+from yuanjisong.smart_filter import apply_blacklist, filter_valid_budget
 
 ONSITE_WORDS = ("驻场", "坐班", "现场办公")
 

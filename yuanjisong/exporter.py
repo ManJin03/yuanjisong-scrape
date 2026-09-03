@@ -8,8 +8,8 @@ from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
-from models import Project
-import config
+from yuanjisong.models import Project
+from yuanjisong import config
 
 COLUMNS = [
     ("ID", lambda p: p.id),

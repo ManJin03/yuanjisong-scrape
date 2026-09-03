@@ -7,14 +7,38 @@
 
 | 模块 | 文件 | 说明 |
 |---|---|---|
-| 爬虫抓取 | `scrape_lightweight.py` | 基于 `curl_cffi` 异步并发，模拟 Chrome 131 TLS 指纹，WAF 预热、指数退避重试、断点续爬、周期性落盘 |
-| 代理池 | `proxy_pool.py` | 抓取免费代理并测活，按成功率加权随机，连续失败 3 次拉黑、5 分钟自动恢复；池空自动降级直连 |
-| 智能过滤 | `smart_filter.py` | 内置四类黑名单（高难度 / 违规敏感 / 硬件 IoT / 游戏开发 / 驻场），命中原因写回字段可审计 |
-| 技术分类 | `classify.py` | 关键词优先级归类 10 个方向（爬虫 / AI 智能体 / 小程序移动端 / 前端 / 后端接口 / Web 全栈 / 测试质检 / 运维部署 / 数据分析 / 工具脚本 + 其他） |
-| 学生筛选 | `filter_student_projects.py` | 预算 ≤ 500 元、非驻场（远程）、未命中黑名单，按预算升序 -> 投递人数升序排序 |
-| Excel 导出 | `exporter.py` | openpyxl 多 Sheet、表头样式、自适应列宽、冻结首行、职位超链接 |
-| 数据模型 | `models.py` | `Project` 数据类 + SSR HTML 解析器（解析自真实页面结构） |
+| 爬虫抓取 | `yuanjisong/scrape_lightweight.py` | 基于 `curl_cffi` 异步并发，模拟 Chrome 131 TLS 指纹，WAF 预热、指数退避重试、断点续爬、周期性落盘 |
+| 代理池 | `yuanjisong/proxy_pool.py` | 抓取免费代理并测活，按成功率加权随机，连续失败 3 次拉黑、5 分钟自动恢复；池空自动降级直连 |
+| 智能过滤 | `yuanjisong/smart_filter.py` | 内置四类黑名单（高难度 / 违规敏感 / 硬件 IoT / 游戏开发 / 驻场），命中原因写回字段可审计 |
+| 技术分类 | `yuanjisong/classify.py` | 关键词优先级归类 10 个方向（爬虫 / AI 智能体 / 小程序移动端 / 前端 / 后端接口 / Web 全栈 / 测试质检 / 运维部署 / 数据分析 / 工具脚本 + 其他） |
+| 学生筛选 | `yuanjisong/filter_student_projects.py` | 预算 ≤ 500 元、非驻场（远程）、未命中黑名单，按预算升序 -> 投递人数升序排序 |
+| Excel 导出 | `yuanjisong/exporter.py` | openpyxl 多 Sheet、表头样式、自适应列宽、冻结首行、职位超链接 |
+| 数据模型 | `yuanjisong/models.py` | `Project` 数据类 + SSR HTML 解析器（解析自真实页面结构） |
 | 一键流水线 | `main.py` | `scrape` / `classify` / `student` / `all` 子命令 |
+
+## 目录结构
+
+```text
+yuanjisong-scrape/
+├── main.py                  # 统一入口（薄壳，转发到 yuanjisong.cli）
+├── requirements.txt         # 依赖（curl_cffi / openpyxl / pytest）
+├── .env.example             # 环境变量模板（代理订单等，可选）
+├── yuanjisong/              # 核心包
+│   ├── __init__.py
+│   ├── cli.py               # 命令行入口：scrape/classify/student/all
+│   ├── config.py            # 全局配置与词库
+│   ├── models.py            # Project 数据模型 + HTML 解析器
+│   ├── scrape_lightweight.py# 异步并发爬虫（断点续爬）
+│   ├── proxy_pool.py        # 代理池
+│   ├── smart_filter.py      # 黑名单过滤
+│   ├── classify.py          # 技术分类
+│   ├── filter_student_projects.py # 学生筛选
+│   └── exporter.py          # Excel 导出
+├── tests/                   # Pytest 测试（fixtures 含真实页面样本）
+│   └── fixtures/
+├── output/                  # 运行产物（已 gitignore）
+└── README.md / LICENSE
+```
 
 ## 安装
 

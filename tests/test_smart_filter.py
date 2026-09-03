@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from models import Project
-from smart_filter import apply_blacklist, filter_valid_budget, hit_blacklist
+from yuanjisong.models import Project
+from yuanjisong.smart_filter import apply_blacklist, filter_valid_budget, hit_blacklist
 
 
 def mk(**kw):

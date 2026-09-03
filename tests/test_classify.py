@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from classify import classify_all, classify_one, category_summary
-from models import Project
-import config
+from yuanjisong.classify import classify_all, classify_one, category_summary
+from yuanjisong.models import Project
+from yuanjisong import config
 
 
 def mk(**kw):

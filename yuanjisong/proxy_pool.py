@@ -18,7 +18,7 @@ from dataclasses import dataclass
 
 from curl_cffi import requests as cffi_requests
 
-import config
+from yuanjisong import config
 
 
 @dataclass

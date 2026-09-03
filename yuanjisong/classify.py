@@ -8,8 +8,8 @@ from __future__ import annotations
 
 from collections import Counter
 
-from models import Project
-import config
+from yuanjisong.models import Project
+from yuanjisong import config
 
 
 def classify_one(project: Project) -> str:

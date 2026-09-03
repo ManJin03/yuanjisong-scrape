@@ -36,7 +36,7 @@ STUDENT_MAX_BUDGET = 500    # 预算上限（元）
 STUDENT_ALLOW_ONGOING = True  # 是否保留"招募中"项目
 
 # ---------- 路径 ----------
-ROOT_DIR = Path(__file__).resolve().parent
+ROOT_DIR = Path(__file__).resolve().parents[1]
 OUTPUT_DIR = ROOT_DIR / "output"
 DATA_JSON = OUTPUT_DIR / "projects.json"
 STATE_JSON = OUTPUT_DIR / "state.json"

@@ -22,9 +22,9 @@ import time
 
 from curl_cffi import requests as cffi_requests
 
-import config
-from models import Project, load_json, parse_job_cards, save_json
-from proxy_pool import ProxyPool
+from yuanjisong import config
+from yuanjisong.models import Project, load_json, parse_job_cards, save_json
+from yuanjisong.proxy_pool import ProxyPool
 
 
 class State:

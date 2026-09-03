@@ -6,8 +6,8 @@
 """
 from __future__ import annotations
 
-from models import Project
-import config
+from yuanjisong.models import Project
+from yuanjisong import config
 
 
 def hit_blacklist(project: Project) -> tuple[str, str] | None:

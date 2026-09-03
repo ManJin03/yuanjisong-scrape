@@ -2,8 +2,8 @@
 """代理池单元测试：不联网，通过注入代理与模拟 report 验证调度逻辑。"""
 import time
 
-import config
-from proxy_pool import ProxyEntry, ProxyPool
+from yuanjisong import config
+from yuanjisong.proxy_pool import ProxyEntry, ProxyPool
 
 
 def test_pool_empty_returns_none():

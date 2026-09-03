@@ -3,10 +3,10 @@ from pathlib import Path
 
 from openpyxl import load_workbook
 
-from classify import classify_all
-from exporter import export_all_excel, export_student_excel
-from filter_student_projects import filter_student_projects
-from models import parse_job_cards
+from yuanjisong.classify import classify_all
+from yuanjisong.exporter import export_all_excel, export_student_excel
+from yuanjisong.filter_student_projects import filter_student_projects
+from yuanjisong.models import parse_job_cards
 
 
 def load_fixture_projects():

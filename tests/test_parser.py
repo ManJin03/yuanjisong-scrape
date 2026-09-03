@@ -2,7 +2,7 @@
 """解析器测试：直接使用线上抓取的真实页面 fixture，保证结构对准。"""
 from pathlib import Path
 
-from models import Project, dedupe, parse_job_cards, parse_project_id
+from yuanjisong.models import Project, dedupe, parse_job_cards, parse_project_id
 
 FIXTURE = Path(__file__).parent / "fixtures" / "job_page1.html"
 TWO_CARDS = Path(__file__).parent / "fixtures" / "two_cards.html"
