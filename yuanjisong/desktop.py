@@ -10,6 +10,7 @@
 """
 from __future__ import annotations
 
+import os
 import sys
 import threading
 import traceback
@@ -73,6 +74,18 @@ def run_desktop(host: str = "127.0.0.1", port: int = 8765) -> None:
             server.server_close()
         except Exception:  # noqa: BLE001
             pass
+
+    # headless 模式（环境变量 DESKTOP_HEADLESS=1）：跳过窗口，仅运行本地服务。
+    # 供 CI 冒烟测试与无图形环境使用，验证打包产物内服务与依赖可用性。
+    if os.environ.get("DESKTOP_HEADLESS") == "1":
+        _log("[start] headless 模式：跳过窗口，仅运行本地服务")
+        try:
+            server.serve_forever()
+        except KeyboardInterrupt:
+            pass
+        finally:
+            _stop_server()
+        return
 
     try:
         webview.create_window(
