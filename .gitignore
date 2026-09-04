@@ -5,3 +5,5 @@ __pycache__/
 output/
 *.log
 .pytest_cache/
+build/
+dist/

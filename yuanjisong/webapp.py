@@ -769,8 +769,13 @@ def make_handler(store: DataStore, scraper: ScrapeManager):
     return Handler
 
 
-def run(host: str = "127.0.0.1", port: int = 8765, open_browser: bool = True) -> None:
-    """启动 Web 软件：自动选择可用端口并打开浏览器。"""
+def start_server(host: str = "127.0.0.1", port: int = 8765):
+    """启动 Web 服务（不阻塞）：自动选端口，返回 (server, url)。
+
+    供 run()（阻塞模式）与 desktop.py（pywebview 窗口壳）共用。
+    注意：只绑定端口，不开始受理请求——调用方需自行在某个线程调用
+    server.serve_forever()，退出时执行 server.shutdown() / server.server_close()。
+    """
     store = DataStore()
     scraper = ScrapeManager(store)
     for mod in missing_deps():
@@ -786,7 +791,13 @@ def run(host: str = "127.0.0.1", port: int = 8765, open_browser: bool = True) ->
     if server is None:
         raise RuntimeError("8765-8789 端口均被占用")
     url = f"http://{host}:{port}/"
-    print(f"[gui] 猿急送智能筛选软件已启动：{url}（Ctrl+C 退出）")
+    print(f"[gui] 猿急送智能筛选软件已启动：{url}")
+    return server, url
+
+
+def run(host: str = "127.0.0.1", port: int = 8765, open_browser: bool = True) -> None:
+    """启动 Web 软件（阻塞模式）：自动选择可用端口并打开浏览器。"""
+    server, url = start_server(host, port)
     if open_browser:
         threading.Timer(0.6, lambda: webbrowser.open(url)).start()
     try:

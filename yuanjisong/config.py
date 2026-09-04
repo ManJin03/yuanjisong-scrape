@@ -2,6 +2,7 @@
 """全局配置：URL、并发、路径、筛选阈值、黑名单与分类词库。"""
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 # ---------- 站点 ----------
@@ -36,7 +37,12 @@ STUDENT_MAX_BUDGET = 500    # 预算上限（元）
 STUDENT_ALLOW_ONGOING = True  # 是否保留"招募中"项目
 
 # ---------- 路径 ----------
-ROOT_DIR = Path(__file__).resolve().parents[1]
+# PyInstaller 打包（sys.frozen）后：数据目录锚定到 exe 同级目录，
+# 保证数据在应用目录下持久化、断点续爬状态不丢；源码运行时维持原项目根目录。
+if getattr(sys, "frozen", False):
+    ROOT_DIR = Path(sys.executable).resolve().parent
+else:
+    ROOT_DIR = Path(__file__).resolve().parents[1]
 OUTPUT_DIR = ROOT_DIR / "output"
 DATA_JSON = OUTPUT_DIR / "projects.json"
 STATE_JSON = OUTPUT_DIR / "state.json"
