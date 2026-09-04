@@ -176,69 +176,110 @@ PAGE = r"""<!DOCTYPE html>
 <title>猿急送兼职项目智能筛选系统</title>
 <style>
 :root{
-  --bg:#dfe6ef; --panel:#ffffff; --side:#1e293b; --side2:#273548;
-  --line:#e2e8f0; --txt:#1e293b; --dim:#64748b;
-  --acc:#2563eb; --green:#059669; --red:#dc2626; --amber:#d97706;
+  --bg:#eef1f6; --panel:#ffffff;
+  --line:#e6ebf2; --txt:#1e293b; --dim:#64748b;
+  --acc:#3b82f6; --acc2:#2563eb; --vio:#8b5cf6;
+  --green:#059669; --red:#dc2626; --amber:#d97706;
   --green-bg:#ecfdf5; --red-bg:#fef2f2; --amber-bg:#fffbeb; --blue-bg:#eff6ff;
+  --r-xl:18px; --r-lg:14px; --r-md:10px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{display:flex;background:var(--bg);color:var(--txt);
      font:14px/1.65 "Microsoft YaHei UI","Segoe UI",system-ui,sans-serif;overflow:hidden}
 
-/* ================= 左侧选项栏 ================= */
-aside{width:292px;min-width:292px;height:100vh;overflow-y:auto;background:var(--side);
-      color:#cbd5e1;display:flex;flex-direction:column}
-.brand{padding:18px 20px 14px;border-bottom:1px solid #33415580}
-.brand h1{font-size:16.5px;color:#fff;font-weight:600;letter-spacing:.5px}
-.brand .sub{font-size:11.5px;color:#7d8ea5;margin-top:3px}
-section{padding:14px 16px;border-bottom:1px solid #33415555}
-section h4{font-size:11px;font-weight:600;color:#7d8ea5;letter-spacing:2px;
-           margin-bottom:10px;padding-left:9px;position:relative}
-section h4::before{content:"";position:absolute;left:0;top:2px;bottom:2px;width:3px;
-                   border-radius:2px;background:var(--acc)}
-.field{margin-bottom:10px}
+/* ================= 左侧选项栏（圆角卡片式） ================= */
+aside{width:302px;min-width:302px;height:100vh;overflow-y:auto;
+      background:linear-gradient(180deg,#1c2536 0%,#171f2e 55%,#131a27 100%);
+      color:#cbd5e1;display:flex;flex-direction:column;padding-bottom:14px}
+aside::-webkit-scrollbar{width:8px}
+aside::-webkit-scrollbar-thumb{background:#33415566;border-radius:4px}
+aside::-webkit-scrollbar-thumb:hover{background:#47556999}
+.brand{padding:22px 20px 16px;display:flex;align-items:center;gap:12px}
+.brand .logo{width:42px;height:42px;border-radius:13px;flex:none;
+  background:linear-gradient(135deg,#3b82f6,#8b5cf6);
+  display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;
+  box-shadow:0 6px 18px rgba(59,130,246,.38)}
+.brand h1{font-size:16.5px;color:#fff;font-weight:700;letter-spacing:.5px;line-height:1.3}
+.brand .sub{font-size:11.5px;color:#7d8ea5;margin-top:2px}
+section{margin:0 12px 12px;padding:14px 14px 13px;
+        background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+        border-radius:var(--r-xl);box-shadow:0 4px 16px rgba(0,0,0,.16)}
+section h4{font-size:11px;font-weight:700;color:#9fb2c8;letter-spacing:2.5px;
+           margin-bottom:12px;display:flex;align-items:center;gap:8px}
+section h4::before{content:"";width:7px;height:7px;border-radius:50%;flex:none;
+                   background:linear-gradient(135deg,#3b82f6,#8b5cf6);
+                   box-shadow:0 0 8px rgba(99,102,241,.85)}
+.field{margin-bottom:11px}
 .field:last-child{margin-bottom:0}
-.field>span{display:block;font-size:12px;color:#8ba0b8;margin-bottom:4px}
+.field>span{display:block;font-size:12px;color:#8ba0b8;margin-bottom:5px}
 .row2{display:flex;gap:8px;align-items:center}
-aside button{width:100%;text-align:left;background:var(--side2);color:#dbe6f2;border:1px solid #3b4d64;
-             border-radius:7px;padding:8px 12px;cursor:pointer;font-size:13px;
-             margin-bottom:8px;transition:.15s;display:flex;align-items:center;gap:7px}
-aside button:hover{border-color:var(--acc);color:#fff;background:#2c3d54}
-aside button.primary{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
-aside button.primary:hover{filter:brightness(1.12)}
-aside button.green{background:#166534;border-color:#166534;color:#fff}
-aside button.green:hover{filter:brightness(1.15)}
-aside button:disabled{opacity:.45;cursor:not-allowed}
+.row2>span{font-size:12px;color:#8ba0b8;flex:none}
+aside button{width:100%;text-align:left;
+  background:rgba(255,255,255,.07);color:#dbe6f2;border:1px solid rgba(255,255,255,.11);
+  border-radius:var(--r-md);padding:9px 13px;cursor:pointer;font-size:13px;font-weight:500;
+  margin-bottom:8px;transition:.18s;display:flex;align-items:center;gap:8px}
+aside section button:last-child{margin-bottom:0}
+aside button:hover{border-color:rgba(110,150,255,.65);color:#fff;
+  background:rgba(99,140,255,.16);transform:translateY(-1px)}
+aside button:active{transform:translateY(0)}
+aside button.primary{background:linear-gradient(135deg,#3b82f6,#2563eb);
+  border-color:transparent;color:#fff;font-weight:600;
+  box-shadow:0 4px 14px rgba(37,99,235,.35)}
+aside button.primary:hover{filter:brightness(1.12);box-shadow:0 6px 20px rgba(37,99,235,.5)}
+aside button.green{background:linear-gradient(135deg,#10b981,#059669);
+  border-color:transparent;color:#fff;font-weight:600;
+  box-shadow:0 4px 14px rgba(5,150,105,.3)}
+aside button.green:hover{filter:brightness(1.1);box-shadow:0 6px 20px rgba(5,150,105,.45)}
+aside button:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
 aside input[type=text],aside input[type=number],aside select{
-  width:100%;background:#151f2e;color:#e5edf6;border:1px solid #3b4d64;border-radius:7px;
-  padding:7px 10px;font-size:13px}
-aside input:focus,aside select:focus{outline:none;border-color:var(--acc)}
-aside .check{display:flex;align-items:center;gap:8px;padding:6px 2px;font-size:13px;
-             cursor:pointer;user-select:none;border-radius:6px}
-aside .check:hover{background:#ffffff10}
-aside .check input{width:15px;height:15px;accent-color:var(--acc);cursor:pointer}
-.side-stats{margin-top:auto;padding:14px 18px;font-size:12px;color:#7d8ea5;
-            background:#18212e;border-top:1px solid #33415555}
-.side-stats b{color:#e2e8f0;font-size:15px}
+  width:100%;background:rgba(0,0,0,.3);color:#e5edf6;
+  border:1px solid rgba(255,255,255,.13);border-radius:var(--r-md);
+  padding:8px 12px;font-size:13px;transition:.15s}
+aside input::placeholder{color:#5b6b80}
+aside input:focus,aside select:focus{outline:none;border-color:var(--acc);
+  box-shadow:0 0 0 3px rgba(59,130,246,.18);background:rgba(0,0,0,.4)}
+aside .check{display:flex;align-items:center;gap:9px;padding:7px 11px;font-size:13px;
+             cursor:pointer;user-select:none;border-radius:var(--r-md);
+             background:rgba(255,255,255,.045);border:1px solid transparent;
+             margin-bottom:6px;transition:.15s}
+aside .check:last-of-type{margin-bottom:8px}
+aside .check:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.12)}
+aside .check input{width:15px;height:15px;accent-color:var(--acc);cursor:pointer;flex:none}
+.side-stats{margin:auto 12px 0;padding:13px 16px;font-size:12px;color:#7d8ea5;
+            background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);
+            border-radius:var(--r-lg);line-height:1.9}
+.side-stats b{color:#fff;font-size:15px;font-variant-numeric:tabular-nums}
 
 /* ================= 中间信息区 ================= */
 main{flex:1;height:100vh;display:flex;flex-direction:column;min-width:0}
-.topbar{background:var(--panel);border-bottom:1px solid var(--line);padding:12px 22px;
-        display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.chip{background:#f1f5f9;border:1px solid var(--line);border-radius:16px;
-      padding:4px 14px;font-size:12.5px;color:var(--dim)}
-.chip b{color:var(--txt);font-size:14px;margin:0 2px}
+.topbar{padding:16px 20px 4px}
+.topbar-inner{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-xl);
+  padding:12px 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  box-shadow:0 6px 20px rgba(15,23,42,.07)}
+.topbar .title{font-size:14px;font-weight:700;color:var(--txt);margin-right:auto;
+  display:flex;align-items:center;gap:9px}
+.topbar .title::before{content:"";width:9px;height:9px;border-radius:50%;flex:none;
+  background:linear-gradient(135deg,#3b82f6,#8b5cf6);
+  box-shadow:0 0 8px rgba(99,102,241,.6)}
+.chip{background:#f1f5f9;border:1px solid var(--line);border-radius:999px;
+      padding:4px 14px;font-size:12.5px;color:var(--dim);transition:.15s;
+      display:inline-flex;align-items:center;gap:4px}
+.chip:hover{background:#f8fafc;border-color:#cbd5e1}
+.chip b{color:var(--txt);font-size:14px;margin:0 2px;font-variant-numeric:tabular-nums}
 .chip.hl{background:var(--green-bg);border-color:#a7f3d0;color:#047857}
 .chip.hl b{color:#065f46}
-.topbar .title{font-size:13px;color:var(--dim);margin-right:auto}
+.chip.blue{background:var(--blue-bg);border-color:#bfdbfe;color:#1d4ed8}
+.chip.blue b{color:#1e40af}
+.chip.amber{background:var(--amber-bg);border-color:#fde68a;color:#b45309}
+.chip.amber b{color:#92400e}
 
 /* ============ 卡片区（背景 + 悬浮卡片） ============ */
-.card-area{flex:1;overflow-y:auto;overflow-x:hidden;padding:20px 22px;
-           background:linear-gradient(160deg,#e6ecf4 0%,#d8e1ec 55%,#cfd9e6 100%)}
+.card-area{flex:1;overflow-y:auto;overflow-x:hidden;padding:16px 20px 20px;
+           background:linear-gradient(160deg,#e9eef5 0%,#dde5ee 55%,#d3dde9 100%)}
 .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(324px,1fr));
            gap:14px;align-content:start}
-.card{background:var(--panel);border:1px solid #e3e9f1;border-radius:12px;
+.card{background:var(--panel);border:1px solid #e3e9f1;border-radius:var(--r-lg);
       padding:14px 16px 12px;cursor:pointer;position:relative;
       box-shadow:0 1px 3px rgba(15,23,42,.07),0 1px 2px rgba(15,23,42,.04);
       transition:transform .14s,box-shadow .14s,border-color .14s;
@@ -256,7 +297,7 @@ main{flex:1;height:100vh;display:flex;flex-direction:column;min-width:0}
 .card-money{color:var(--green);font-weight:700;font-size:18px;white-space:nowrap;
             font-variant-numeric:tabular-nums}
 .card-tags{display:flex;flex-wrap:wrap;gap:6px}
-.tag{display:inline-block;padding:2px 9px;border-radius:11px;font-size:11.5px;
+.tag{display:inline-block;padding:2px 10px;border-radius:999px;font-size:11.5px;
      white-space:nowrap;font-weight:500}
 .tag.remote{background:#dbeafe;color:#1d4ed8}
 .tag.onsite{background:var(--amber-bg);color:#b45309}
@@ -271,27 +312,31 @@ main{flex:1;height:100vh;display:flex;flex-direction:column;min-width:0}
            padding-top:8px;margin-top:auto}
 .card-foot .employer{max-width:70%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dim{color:var(--dim)}
-.empty{grid-column:1/-1;padding:80px 20px;text-align:center;color:var(--dim);
-       font-size:14px;background:#ffffff90;border-radius:12px}
+.empty{grid-column:1/-1;padding:70px 20px;text-align:center;color:var(--dim);
+       font-size:14px;background:#ffffffa8;border:1px dashed #cbd5e1;
+       border-radius:var(--r-xl)}
 
 /* ================= 底部：详情/日志 ================= */
 .bottom{height:250px;min-height:250px;border-top:1px solid var(--line);background:var(--panel);
         display:flex;flex-direction:column}
-.tabs{display:flex;border-bottom:1px solid var(--line);background:#f8fafc}
-.tabs button{background:none;border:none;border-right:1px solid var(--line);color:var(--dim);
-             padding:9px 22px;font-size:13px;cursor:pointer}
-.tabs button.active{background:var(--panel);color:var(--acc);font-weight:600;
-                    border-bottom:2px solid var(--acc);margin-bottom:-1px}
+.tabs{display:flex;gap:8px;padding:10px 16px 10px;border-bottom:1px solid var(--line);
+      background:var(--panel)}
+.tabs button{background:#f1f5f9;border:1px solid transparent;border-radius:999px;color:var(--dim);
+             padding:6px 20px;font-size:13px;cursor:pointer;transition:.15s}
+.tabs button:hover{color:var(--txt);background:#e8eef6}
+.tabs button.active{background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;
+                    font-weight:600;box-shadow:0 3px 10px rgba(37,99,235,.3)}
 .pane{flex:1;overflow:auto;display:none;padding:16px 22px}
 .pane.active{display:block}
 #detail h3{font-size:16px;margin-bottom:6px}
 #detail .money{color:var(--green);font-size:18px;font-weight:700;margin-left:10px}
 #detail .meta{display:flex;flex-wrap:wrap;gap:8px 22px;color:var(--dim);font-size:12.5px;
-              margin:8px 0;padding:10px 14px;background:#f8fafc;border-radius:8px}
+              margin:8px 0;padding:10px 14px;background:#f8fafc;border-radius:var(--r-md)}
 #detail .btns{display:flex;gap:8px;margin:6px 0 12px}
-#detail .btns button{background:#fff;border:1px solid var(--line);border-radius:7px;
-                     padding:6px 16px;font-size:13px;cursor:pointer;color:var(--txt)}
-#detail .btns button.primary{background:var(--acc);border-color:var(--acc);color:#fff}
+#detail .btns button{background:#fff;border:1px solid var(--line);border-radius:999px;
+                     padding:6px 18px;font-size:13px;cursor:pointer;color:var(--txt);transition:.15s}
+#detail .btns button.primary{background:linear-gradient(135deg,#3b82f6,#2563eb);
+  border-color:transparent;color:#fff;font-weight:600;box-shadow:0 3px 10px rgba(37,99,235,.28)}
 #detail .btns button:hover{border-color:var(--acc)}
 #detail .desc{white-space:pre-wrap;font-size:13.5px;color:#334155;line-height:1.8}
 #logBox{font-family:Consolas,"Courier New",monospace;font-size:12px;color:#475569;white-space:pre-wrap}
@@ -303,8 +348,11 @@ main{flex:1;height:100vh;display:flex;flex-direction:column;min-width:0}
 <!-- ============ 左侧：全部选项 ============ -->
 <aside>
   <div class="brand">
-    <h1>猿急送 · 智能筛选</h1>
-    <div class="sub">兼职项目读取 / 爬取 / 搜索 / 筛选</div>
+    <div class="logo">猿</div>
+    <div>
+      <h1>猿急送 · 智能筛选</h1>
+      <div class="sub">兼职项目读取 / 爬取 / 搜索 / 筛选</div>
+    </div>
   </div>
 
   <section>
@@ -361,11 +409,13 @@ main{flex:1;height:100vh;display:flex;flex-direction:column;min-width:0}
 <!-- ============ 中间：信息区 ============ -->
 <main>
   <div class="topbar">
-    <span class="title">猿急送兼职项目 · 数据浏览</span>
-    <span class="chip">共 <b id="totalCount">0</b> 条</span>
-    <span class="chip hl">显示 <b id="viewCount">0</b> 条</span>
-    <span class="chip">远程 <b id="remoteCount">0</b></span>
-    <span class="chip">学生友好 <b id="studentCount">0</b></span>
+    <div class="topbar-inner">
+      <span class="title">兼职项目数据浏览</span>
+      <span class="chip">共 <b id="totalCount">0</b> 条</span>
+      <span class="chip hl">显示 <b id="viewCount">0</b> 条</span>
+      <span class="chip blue">远程 <b id="remoteCount">0</b></span>
+      <span class="chip amber">学生友好 <b id="studentCount">0</b></span>
+    </div>
   </div>
 
   <div class="card-area">
