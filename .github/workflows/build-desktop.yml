@@ -4,6 +4,9 @@ name: 桌面端构建与发布
 #   1) 推送 v* 标签（如 v1.0.0）-> 构建 + 自动发布 GitHub Release
 #   2) 推送/PR 到 master    -> 仅构建校验，产出物作为 Artifact 下载
 #   3) Actions 页面手动运行（workflow_dispatch）
+#
+# 注意：所有 action 均使用 node24 运行时的最新版本（Node 20 已弃用），
+#      需要 Actions Runner v2.327.1 或更高。
 
 on:
   push:
@@ -22,10 +25,10 @@ jobs:
 
     steps:
       - name: 检出代码
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: 准备 Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: pip
@@ -68,15 +71,20 @@ jobs:
 
       - name: 上传构建产物（非 tag 触发时）
         if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: desktop-windows
           path: 猿急送筛选系统-*.zip
           retention-days: 30
 
+      # 用 GitHub CLI 发布：gh 为运行器内置，不经过 Node 运行时，无第三方 action 依赖
       - name: 发布 Release
         if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: 猿急送筛选系统-*.zip
-          generate_release_notes: true
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $zip = Get-ChildItem -Path . -Filter "猿急送筛选系统-*.zip" | Select-Object -First 1
+          if (-not $zip) { throw "未找到待发布的 zip 产物" }
+          gh release create "${{ github.ref_name }}" $zip.Name `
+            --title "${{ github.ref_name }}" --generate-notes

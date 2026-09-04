@@ -136,7 +136,9 @@ build_desktop.bat        # 一键构建，产物：dist\猿急送筛选系统\
 
 ### 自动构建与发布（GitHub Actions）
 
-仓库已配置工作流 `.github/workflows/build-desktop.yml`（windows-latest 运行器）：
+仓库已配置工作流 `.github/workflows/build-desktop.yml`（windows-latest 运行器）。
+所有 action 均使用 Node 24 运行时的最新版（checkout/setup-python/upload-artifact 均为 v7），
+发布环节直接用运行器内置的 `gh` CLI，不引入第三方 action：
 
 | 触发方式 | 行为 |
 | --- | --- |
