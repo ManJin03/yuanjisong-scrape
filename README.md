@@ -136,15 +136,12 @@ build_desktop.bat        # 一键构建，产物：dist\猿急送筛选系统\
 
 ### 自动构建与发布（GitHub Actions）
 
-仓库已配置工作流 `.github/workflows/build-desktop.yml`（windows-latest 运行器）。
-所有 action 均使用 Node 24 运行时的最新版（checkout/setup-python/upload-artifact 均为 v7），
-发布环节直接用运行器内置的 `gh` CLI，不引入第三方 action：
+仓库已配置工作流 `.github/workflows/build-desktop.yml`（windows-latest 运行器，最小步骤：安装依赖 → 打包 → 压缩）：
 
 | 触发方式 | 行为 |
 | --- | --- |
-| 推送 tag：`git tag v1.0.0 && git push origin v1.0.0` | 跑测试 → 打包 → 冒烟验证 → **自动发布 Release**（附 zip 与自动生成说明） |
-| 推送 / PR 到 master | 仅构建校验，产物作为 Artifact 保留 30 天 |
-| Actions 页面「Run workflow」 | 手动触发构建 |
+| 推送 tag：`git tag v1.0.0 && git push origin v1.0.0` | 打包 → **自动发布 Release**（附 zip 与自动生成说明） |
+| 推送 master / Actions 页面「Run workflow」 | 仅构建，产物在 Actions 的 Artifacts 中下载 |
 
 发版步骤：
 
