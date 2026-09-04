@@ -20,7 +20,7 @@
 
 ### 方案一：桌面端应用（推荐）
 
-**A. 拿到现成产物（最简）**：从仓库 Releases 页面下载 `猿急送筛选系统-<版本>.zip`
+**A. 拿到现成产物（最简）**：从仓库 Releases 页面下载 `yuanjisong-desktop-<版本>.zip`
 （由 GitHub Actions 自动构建发布），或从已有的 `dist\猿急送筛选系统\` 目录（约 36MB）中
 双击 `猿急送筛选系统.exe` 即可运行，无需安装任何东西。
 分发给他人时，**将整个 `猿急送筛选系统` 目录压缩发送**即可。
@@ -150,7 +150,8 @@ git tag v1.0.0
 git push origin v1.0.0        # 推送后约 3-5 分钟，Release 页面出现 zip 附件
 ```
 
-Release 中的 `猿急送筛选系统-<tag>.zip` 解压即得完整应用目录，双击 exe 运行。
+Release 中的 `yuanjisong-desktop-<tag>.zip` 解压即得完整应用目录，双击 exe 运行。
+（CI 脚本内统一使用 ASCII 文件名，规避 Windows 运行器脚本编码问题；压缩包内的应用目录与 exe 仍为中文名）
 
 ### 目录结构
 

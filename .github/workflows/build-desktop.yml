@@ -27,16 +27,17 @@ jobs:
           python -m pip install -r requirements.txt "pyinstaller>=6.0"
           pyinstaller --noconfirm yuanjisong.spec
 
+      # 注意：CI 脚本内一律使用 ASCII 文件名（Windows 运行器脚本编码会丢弃非 ASCII 字符）
       - name: 压缩产物
         shell: pwsh
-        run: Compress-Archive -Path "dist\*" -DestinationPath "猿急送筛选系统-${{ github.ref_name }}.zip"
+        run: Compress-Archive -Path "dist\*" -DestinationPath "yuanjisong-desktop-${{ github.ref_name }}.zip"
 
       - name: 上传产物（非 tag 触发时）
         if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
         uses: actions/upload-artifact@v7
         with:
           name: desktop-windows
-          path: 猿急送筛选系统-*.zip
+          path: yuanjisong-desktop-*.zip
 
       - name: 发布 Release
         if: startsWith(github.ref, 'refs/tags/v')
@@ -44,5 +45,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          $zip = Get-ChildItem -Filter "猿急送筛选系统-*.zip" | Select-Object -First 1
-          gh release create "${{ github.ref_name }}" $zip.Name --title "${{ github.ref_name }}" --generate-notes
+          $zip = Get-ChildItem -Filter "yuanjisong-desktop-*.zip" | Select-Object -First 1
+          if (-not $zip) { throw "zip artifact not found" }
+          gh release create "${{ github.ref_name }}" $zip.Name --generate-notes
