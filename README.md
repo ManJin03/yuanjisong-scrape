@@ -20,8 +20,9 @@
 
 ### 方案一：桌面端应用（推荐）
 
-**A. 拿到现成产物（最简）**：若已有 `dist\猿急送筛选系统\` 目录（约 36MB），
-双击其中的 `猿急送筛选系统.exe` 即可运行，无需安装任何东西。
+**A. 拿到现成产物（最简）**：从仓库 Releases 页面下载 `猿急送筛选系统-<版本>.zip`
+（由 GitHub Actions 自动构建发布），或从已有的 `dist\猿急送筛选系统\` 目录（约 36MB）中
+双击 `猿急送筛选系统.exe` 即可运行，无需安装任何东西。
 分发给他人时，**将整个 `猿急送筛选系统` 目录压缩发送**即可。
 
 **B. 从源码构建产物**（Windows，仅构建者需要）：
@@ -133,6 +134,25 @@ build_desktop.bat        # 一键构建，产物：dist\猿急送筛选系统\
 - 排除 pytest 等运行时无关模块
 - 打包后数据路径自动锚定到 exe 同级目录（`sys.frozen` 检测）
 
+### 自动构建与发布（GitHub Actions）
+
+仓库已配置工作流 `.github/workflows/build-desktop.yml`（windows-latest 运行器）：
+
+| 触发方式 | 行为 |
+| --- | --- |
+| 推送 tag：`git tag v1.0.0 && git push origin v1.0.0` | 跑测试 → 打包 → 冒烟验证 → **自动发布 Release**（附 zip 与自动生成说明） |
+| 推送 / PR 到 master | 仅构建校验，产物作为 Artifact 保留 30 天 |
+| Actions 页面「Run workflow」 | 手动触发构建 |
+
+发版步骤：
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0        # 推送后约 3-5 分钟，Release 页面出现 zip 附件
+```
+
+Release 中的 `猿急送筛选系统-<tag>.zip` 解压即得完整应用目录，双击 exe 运行。
+
 ### 目录结构
 
 ```text
@@ -157,6 +177,7 @@ yuanjisong-scrape/
 │   ├── classify.py          # 技术分类
 │   ├── filter_student_projects.py # 学生筛选
 │   └── exporter.py          # Excel 导出
+├── .github/workflows/       # GitHub Actions：自动构建/测试/发布 Release
 ├── tests/                   # Pytest 测试（fixtures 含真实页面样本）
 ├── output/                  # 运行产物（已 gitignore）
 └── README.md / LICENSE
